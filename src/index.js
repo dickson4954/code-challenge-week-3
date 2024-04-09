@@ -1,12 +1,12 @@
-let films = "http://localhost:4001/films"
+let films = "https://code-challenge-3-server.onrender.com/films"
       document.addEventListener('DOMContentLoaded', async(event)=>{
           const films = await showFiles()
            viewMoviePoster(films)
            
       })
-movieTitles()
+showTitles()
       function showFiles() {
-          return fetch("http://localhost:4001/films",{
+          return fetch("https://code-challenge-3-server.onrender.com/films",{
               method:"GET",
               headers:{
                   "Content-Type": "application/json",
@@ -19,24 +19,58 @@ movieTitles()
       }
       
       const ul = document.getElementById("films")
-      function movieTitles() {
-          return fetch("http://localhost:4001/films")
+      function showTitles() {
+          return fetch("https://code-challenge-3-server.onrender.com/films")
           .then(res => res.json())
           .then(title => title.map(movie => {
             let li = document.createElement("li");
             li.innerHTML = `
             <div>
             <h3 id="${movie.id}"class="movies">${movie.title}</h3> 
+            <button id="D${movie.id}">Delete</button>
             </div>`
+
+
             ul.appendChild(li)
+            deleteFilms(movie)
+            
             ul.addEventListener('click', (e)=>{
                 document.getElementById('title').textContent = (e.target.textContent)
-                document.getElementById('runtime').textContent=(e.target.id)
+                title.forEach((item)=>{
+                    
+                    if (e.target.textContent===item.title){
+                        document.getElementById('runtime').textContent=item.runtime
+                        document.getElementById('film-info').textContent = item.description
+                        document.getElementById('showtime').textContent=item.showtime
+                        document.getElementById('ticket-num').textContent=item.capacity
+                        
+                    }
+
+
+                })
+
+
+            
+               
+                
+            
                 
               })
           }))
-      }
 
+
+      }
+      function deleteFilms(film){ 
+        const deletemovie=document.getElementById(`D${film.id}`)
+        deletemovie.addEventListener('click',()=>{
+            fetch(`https://code-challenge-3-server.onrender.com/films/${film.id}`,{
+                method:"DELETE"
+            })
+
+        })
+
+
+      }
     
       function viewMoviePoster(films){
         const photo = document.querySelector('#photo')
@@ -80,16 +114,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
   });
-  function setUpMovieDetails(childMovie){
-    const preview=document.getElementById('poster')
-    preview.src=childMovie.poster;
-
-    document.getElementById('title').textContent=childMovie.title;
-    document.getElementById('runtime').textContent=`${childMovie.runtime} minutes`;
-    document.getElementById('film-info').textContent=childMovie.description;
-    document.getElementById('showtime').textContent=childMovie.showtime;
-    document.getElementById('ticket-num').textContent=childMovie.capacity -childMovie.tickets_sold;
-  }
 const btn =document.getElementById('buy-ticket');
 btn.addEventListener('click',function(e){
     let remtickets=parseInt(document.querySelector('#ticket-num').textContent,10);
