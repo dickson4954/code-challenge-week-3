@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const ticketnum = document.getElementById("ticket-num")
     BuyTicket.addEventListener("click",() =>{
 
-        //sending a get request to the backend to enable one to purchase a ticket using fetch
+        //sending get request to the backend to enable one to purchase a ticket using fetch
          fetch("buy-ticket",{
             method:"POST"
         })
